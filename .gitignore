@@ -1,0 +1,5 @@
+sim/*.vcd
+sim/riscv_sim
+synth/
+*.swp
+__pycache__/
