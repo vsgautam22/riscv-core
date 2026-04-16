@@ -1,5 +1,13 @@
-sim/*.vcd
-sim/riscv_sim
-synth/
-*.swp
+# Simulation artifacts
+*.vcd
+sim/
+
+# Synthesis logs
+*.log
+*.txt
+
+# Python cache
 __pycache__/
+
+# Temporary
+*.out

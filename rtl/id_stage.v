@@ -206,13 +206,8 @@ module id_stage (
     );
 
     // ID/EX pipeline register
-    // FIXED - flush is synchronous, only rst_n is async
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            // same reset assignments...
-        end else if (flush) begin
-            // same flush assignments...
-        end else if (!stall) begin
             id_ex_pc         <= 32'h0;
             id_ex_rd1        <= 32'h0;
             id_ex_rd2        <= 32'h0;
@@ -220,7 +215,26 @@ module id_stage (
             id_ex_rs1        <= 5'h0;
             id_ex_rs2        <= 5'h0;
             id_ex_rd         <= 5'h0;
-            id_ex_alu_op     <= ALU_ADD;
+            id_ex_alu_op     <= 4'h0;
+            id_ex_alu_src    <= 1'b0;
+            id_ex_mem_we     <= 1'b0;
+            id_ex_mem_size   <= 3'h0;
+            id_ex_mem_re     <= 1'b0;
+            id_ex_reg_we     <= 1'b0;
+            id_ex_mem_to_reg <= 1'b0;
+            id_ex_result_sel <= 2'b00;
+            id_ex_branch     <= 1'b0;
+            id_ex_jump       <= 1'b0;
+        end else if (flush) begin
+            // NOP bubble — clear all control signals, preserve pipeline flow
+            id_ex_pc         <= 32'h0;
+            id_ex_rd1        <= 32'h0;
+            id_ex_rd2        <= 32'h0;
+            id_ex_imm        <= 32'h0;
+            id_ex_rs1        <= 5'h0;
+            id_ex_rs2        <= 5'h0;
+            id_ex_rd         <= 5'h0;
+            id_ex_alu_op     <= 4'h0;
             id_ex_alu_src    <= 1'b0;
             id_ex_mem_we     <= 1'b0;
             id_ex_mem_size   <= 3'h0;
@@ -249,6 +263,7 @@ module id_stage (
             id_ex_branch     <= branch_c;
             id_ex_jump       <= jump_c;
         end
+        // stall: hold all ID/EX registers (implicit — no else branch)
     end
 
 endmodule
